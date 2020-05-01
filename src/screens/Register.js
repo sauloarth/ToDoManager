@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import {
     KeyboardAvoidingView,
     View,
@@ -6,37 +6,73 @@ import {
     TextInput,
     Text,
     Button,
-    StyleSheet
+    StyleSheet,
+    Alert
 } from 'react-native';
+import { createUserOnFirebaseAsync } from '../services/FirebaseApi'
 
 const img = require('../assets/TodoIcon.png');
 
-export default Register = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    navigationOptions = {
+export default class Register extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: ''
+        }
+    }
+
+    static navigationOptions = {
         title: 'Register'
     }
 
-    return (
-        <KeyboardAvoidingView style={styles.container} behavior='padding'>
-            <View style={styles.topView}>
-                <Image style={styles.img} source={img} />
-                <Text style={styles.title}>Registring a new user</Text>
-            </View>
-            <View style={styles.bottomView}>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Email' />
-                <TextInput
-                    style={styles.input}
-                    placeholder='Password' />
-                <Button title='Register User' />
-            </View>
-        </KeyboardAvoidingView>
-    )
+    async _createUserAsync() {
+        try {
+            console.log(this.state)
+            const user = await createUserOnFirebaseAsync(this.state.email, this.state.password);
+            Alert.alert('User Created!', `User ${user.email} has successfuly been created!`, [
+                {
+                    text: 'Ok', onPress: () => {
+                        this.props.navigation.goBack();
+                    }
+                }
+            ])
+        } catch (error) {
+            Alert.alert('Error while creating user!', error.message)
+        }
+    }
 
+
+    render() {
+        return (
+            <KeyboardAvoidingView style={styles.container} behavior='padding'>
+                <View style={styles.topView}>
+                    <Image style={styles.img} source={img} />
+                    <Text style={styles.title}>Registring a new user</Text>
+                </View>
+                <View style={styles.bottomView}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Email'
+                        autoCapitalize='none'
+                        onChangeText={text => this.setState({ email: text })}
+                        value={this.state.email}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Password'
+                        secureTextEntry={true}
+                        onChangeText={text => this.setState({ password: text })}
+                        value={this.state.password} />
+                    <Button title='Register User'
+                        onPress={() => this._createUserAsync()} />
+                </View>
+            </KeyboardAvoidingView>
+        )
+    }
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
