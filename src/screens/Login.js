@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
     KeyboardAvoidingView,
     StyleSheet,
@@ -10,72 +10,72 @@ import {
     Alert
 } from 'react-native';
 import { signInOnFirebaseAsync } from '../services/FirebaseApi';
+import { CommonActions } from '@react-navigation/native';
 
 const img = require('../assets/TodoIcon.png');
 
 
 
-export default class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            password: ''
-        }
-    }
+export default Login = props => {
 
-    static navigationOptions = {
-        header: null
-    }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    async _signInAsync() {
+    const _signInAsync = async () => {
         try {
-
-            const user = await signInOnFirebaseAsync(this.state.email, this.state.password);
+            const user = await signInOnFirebaseAsync(email, password);
+            console.log('Props: ', props)
             Alert.alert(
                 'User Authenticated',
-                `User authenticates as ${user.email}!`,
+                `User authenticates as ${user.email}! Props:`,
+
             );
+            props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'TaskList' }]
+                })
+            )
+
         } catch (error) {
             Alert.alert('Login failed', error.message);
         }
     }
 
-    render() {
-        return (
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
-                <View style={styles.topView}>
-                    <Image style={styles.img} source={img} />
-                </View>
-                <View style={styles.bottomView}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        value={this.state.email}
-                        keyboardType={'email-address'}
-                        autoCapitalize='none'
-                        onChangeText={text => this.setState({ email: text })}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        value={this.state.password}
-                        onChangeText={text => this.setState({ password: text })}
-                    />
-                    <Button title='Sign in'
-                        onPress={() => this._signInAsync()} />
-                    <View style={styles.textContainer}>
-                        <Text>Not a member? Let's </Text>
-                        <Text style={styles.textRegister}
-                            onPress={() => this.props.navigation.navigate('Register')} >
-                            register
+    return (
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <View style={styles.topView}>
+                <Image style={styles.img} source={img} />
+            </View>
+            <View style={styles.bottomView}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    keyboardType={'email-address'}
+                    autoCapitalize='none'
+                    onChangeText={text => setEmail(text)}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                />
+                <Button title='Sign in'
+                    onPress={() => _signInAsync()} />
+                <View style={styles.textContainer}>
+                    <Text>Not a member? Let's </Text>
+                    <Text style={styles.textRegister}
+                        onPress={() => props.navigation.navigate('Register')} >
+                        register
                     </Text>
-                    </View>
                 </View>
-            </KeyboardAvoidingView>
-        )
-    }
+            </View>
+        </KeyboardAvoidingView>
+    )
+
 }
 
 const styles = StyleSheet.create({
