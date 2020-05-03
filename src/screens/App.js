@@ -30,9 +30,10 @@ export default class App extends Component {
     }
 
     render() {
-        <View style={styles.container}>
-            <ActivityIndicator style={styles.loading} />
-        </View>
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator style={styles.loading} />
+            </View>)
     }
 }
 
