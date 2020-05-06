@@ -1,5 +1,6 @@
 # ToDoManager
 ToDoManager básico criado em React Native
+![](todomanager.gif)
 
 # Descrição
 
