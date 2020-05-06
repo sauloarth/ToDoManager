@@ -28,7 +28,6 @@ export default class Register extends Component {
 
     async _createUserAsync() {
         try {
-            console.log(this.state)
             const user = await createUserOnFirebaseAsync(this.state.email, this.state.password);
             Alert.alert('User Created!', `User ${user.email} has successfuly been created!`, [
                 {

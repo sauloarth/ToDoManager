@@ -5,12 +5,17 @@ import { writeTaskOnFirebaseAsync } from '../services/FirebaseApi';
 export default class Task extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            title: '',
-            resume: '',
-            priority: true,
-            isDone: false
-        }
+
+        !props.route.params ?
+            this.state = {
+                key: '',
+                title: '',
+                resume: '',
+                priority: true,
+                isDone: false
+            } :
+            this.state = { ...props.route.params.task }
+
         this._saveTaskAsync = this._saveTaskAsync.bind(this)
     }
 

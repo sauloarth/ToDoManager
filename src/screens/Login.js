@@ -24,7 +24,6 @@ export default Login = props => {
     const _signInAsync = async () => {
         try {
             const user = await signInOnFirebaseAsync(email, password);
-            console.log('Props: ', props)
             Alert.alert(
                 'User Authenticated',
                 `User authenticates as ${user.email}! Props:`,
