@@ -19,6 +19,10 @@ export default class Task extends Component {
         this._saveTaskAsync = this._saveTaskAsync.bind(this)
     }
 
+    static navigationOptions = {
+        title: 'Task'
+    }
+
     async _saveTaskAsync() {
         const task = { ...this.state }
 
