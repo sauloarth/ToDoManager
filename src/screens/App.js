@@ -22,7 +22,9 @@ export default class App extends Component {
                         routes: [{ name: 'TaskList' }]
                     })
                 )
+                return;
             }
+            this.props.navigation.dispatch(resetNavigation);
         } catch (error) {
             this.props.navigation.dispatch(resetNavigation);
         }
